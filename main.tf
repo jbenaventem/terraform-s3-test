@@ -1,4 +1,13 @@
 # Declare the aws provider
+terraform {
+  cloud {
+    organization = "bnauk"
+
+    workspaces {
+      name = "terraform-s3-test-dev"
+    }
+  }
+}
 provider "aws" {
   region = var.aws_region
 }

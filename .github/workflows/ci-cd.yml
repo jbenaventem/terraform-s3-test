@@ -16,7 +16,7 @@ jobs:
       - name: set up
         id: setup
         run: |
-          if [[ $GITHUB_REF == 'main' || $GITHUB_BASE_REF == 'main' ]]
+          if [[ $GITHUB_REF == 'main' || $GITHUB_BASE_REF == 'develop' ]]
           then
             echo "::set-output name=config::config.pro.tfvars"
           else

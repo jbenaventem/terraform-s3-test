@@ -1,15 +1,6 @@
-# Declare the aws provider
+# main.tf
 terraform {
-  cloud {
-    organization = "bnauk"
-
-    workspaces {
-      name = "terraform-s3-test-dev"
-    }
-  }
-}
-provider "aws" {
-  region = var.aws_region
+  backend "remote" {}
 }
 
 # Create a random id

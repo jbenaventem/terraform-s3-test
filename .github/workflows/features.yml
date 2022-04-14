@@ -1,4 +1,4 @@
-name: CI Terraform Workflow
+name: Terraform Workflow on Feature Branch
 
 on:
   push:
@@ -46,13 +46,12 @@ jobs:
         uses: aquasecurity/tfsec-action@v1.0.0
         with:
           format: sarif
-          soft_fail: true
+          soft_fail: false
           additional_args: --out result.sarif
 
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v1
         with:
-          # Path to SARIF file relative to the root of the repository
           sarif_file: result.sarif
 
       - name: Comments On Pull Request

@@ -1,6 +1,6 @@
-# Declare the aws provider
-provider "aws" {
-  region = var.aws_region
+# main.tf
+terraform {
+  backend "remote" {}
 }
 
 # Create a random id

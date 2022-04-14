@@ -7,6 +7,14 @@ variable "project_name" {
   }
 }
 
+variable "workspace_name" {
+  type        = map(any)
+  description = "Terraform Cloud workspace"
+  default = {
+    dev  = "terraform-s3-test-dev"
+    prod = "terraform-s3-test"
+  }
+}
 variable "aws_region" {
 }
 

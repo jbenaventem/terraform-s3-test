@@ -19,13 +19,11 @@ jobs:
         with:
           terraform_version: ${{ inputs.version }}
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-  
       - name: Run terraform fmt check
-        run: terraform fmt -check -diff
-
-      - name: Terraform Valite 
-        run: terraform validate
-
+        run: |
+          terraform init
+          terraform fmt -check -diff
+          terraform validate
   scan-security:
     name: tfsec sarif report
     runs-on: ubuntu-latest
@@ -33,7 +31,13 @@ jobs:
     steps:
       - name: Clone repo
         uses: actions/checkout@master
-
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@625cb76050397c6b3a1789261eb129f8f39a206b
+        with:
+          terraform_version: ${{ inputs.version }}
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+      - name: Terraform init
+        run: terraform init
       - name: tfsec
         uses: tfsec/tfsec-sarif-action@master
         with:

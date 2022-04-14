@@ -3,14 +3,13 @@ name: CI Terraform Workflow
 on:
   push:
     branches:
-      - main
-      - feature/developer
-  pull_request:
+      - feature/*
 
 jobs:
-  lint:
-    name: Lint
+  fmt-validate:
+    name: Format And validate
     runs-on: ubuntu-latest
+ 
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -24,33 +23,8 @@ jobs:
       - name: Run terraform fmt check
         run: terraform fmt -check -diff
 
-
-  terraform-validate:
-    name: Terraform Validate
-    env:
-      TF_VAR_allowed_account_id: ${{ secrets.ALLOWED_ACCOUNT_ID }}
-    outputs:
-      terraform_has_changes: ${{ steps.tf.outputs.terraform_has_changes }}
-      terraform_plan: "${{ steps.tf.outputs.terraform_plan }}"
-      terraform_output: "${{ steps.tf.outputs.terraform_output }}"
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@625cb76050397c6b3a1789261eb129f8f39a206b
-
-        with:
-          terraform_version: ${{ inputs.version }}
-
-      #- name: Terraform Valite 
-      #  run: terraform validate
-
-      #-name: Terraform format
-      # run: terraform fmt
+      - name: Terraform Valite 
+        run: terraform validate
 
   scan-security:
     name: tfsec sarif report
@@ -75,10 +49,10 @@ jobs:
         uses: tfsec/tfsec-pr-commenter-action@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-  terraform-apply:
-    name: Terraform CI-CD
+  terraform-plan:
+    name: Terraform Plan
     runs-on: ubuntu-latest
-    needs: [ scan-security, terraform-validate]
+    needs: [ fmt-validate, scan-security]
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -125,10 +99,9 @@ jobs:
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
         run: exit 1
-
-    #  - name: Run terraform fmt check
-    #    run: terraform plan -no-color
-      
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve
+  terraform-test:
+    name: Terraform Test
+    runs-on: ubuntu-latest
+    needs: [terraform-plan]
+    steps:
+      - run: echo "Pruebas unitarias sobre el codigo"

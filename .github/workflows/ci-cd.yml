@@ -13,10 +13,13 @@ jobs:
     outputs:
       config: ${{ steps.setup.outputs.config }}
     steps:
+      - name: Get branch name
+        id: get-branch-name
+        uses: EthanSK/git-branch-name-action@v1
       - name: set up
         id: setup
         run: |
-          if [[ $GITHUB_REF == 'main' || $GITHUB_BASE_REF == 'develop' ]]
+          if [[ $GIT_BRANCH_NAME == 'main' || $GITHUB_BASE_REF == 'main' ]]
           then
             echo "::set-output name=config::config.pro.tfvars"
           else

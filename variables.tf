@@ -2,8 +2,8 @@ variable "project_name" {
   type        = map(any)
   description = "Name of the project."
   default = {
-    dev  = "ga-benauca-test-terraform-dev"
-    prod = "ga-benauca-test-terraform-prod"
+    dev  = "test-cto-terraform-dev"
+    prod = "test-cto-terraform-prod"
   }
 }
 
